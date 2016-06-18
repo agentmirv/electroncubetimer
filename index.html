@@ -7,11 +7,43 @@
   <body>
     <h1>Electron Cube Timer Goes Here!</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
+    <div>Number of milliseconds since 1 January 1970 00:00:00 UTC</div>
+    <div id="getTimeDisplay" style="margin-bottom:10px"></div>
+
+    <div>Start Time</div>
+    <div id="startTimeDisplay" style="margin-bottom:10px"></div>
+
+    <div>Elapsed Time</div>
+    <div id="elapsedTimeDisplay" style="margin-bottom:10px"></div>
+
+    <p>
     We are using node <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
+    </p>
   </body>
+  <script>
+    var startDate = new Date();
+    var getTimeDisplay = document.getElementById('getTimeDisplay')
+    var startTimeDisplay = document.getElementById('startTimeDisplay')
 
+    function updateTimerDisplay()
+    {
+      var newDate = new Date()
+      var newTime = newDate.getTime()
+      var startTime = startDate.getTime()
+      var elapsedTime = newTime - startTime
+
+      getTimeDisplay.innerHTML = newTime
+      elapsedTimeDisplay.innerHTML = elapsedTime
+    }
+
+    startTimeDisplay.innerHTML = startDate.getTime()
+
+    window.setInterval(updateTimerDisplay, 1)
+
+  </script>
+  <script src="./app.js"></script>
   <script>
     // You can also require other files to run in this process
     /*require('./renderer.js')*/

@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Hello World!</title>
+    <title>Electron Cube Timer</title>
   </head>
   <body>
     <h1>Electron Cube Timer Goes Here!</h1>
@@ -19,7 +19,7 @@
     <div>Timer LCD</div>
     <span id="elapsedMinutesDisplay"></span>:<span id="elapsedSecondsDisplay"></span>:<span id="elapsedMillisecondsDisplay"></span>
 
-    <p>Spacebar (when pressed and then released) will start and stop the timer.</p>
+    <p>Spacebar will start and stop the timer.</p>
 
     <p>
     We are using node <script>document.write(process.versions.node)</script>,
@@ -30,17 +30,65 @@
   <script>
     function handleKeyUp(e)
     {
-      if(e.keyCode == 32)
+      // State: Standby
+      if(stateId == 1)
       {
-        if(timerInterval == 0)
+        if(e.keyCode == 32)
         {
+          // Goto: Start
+          stateId = 2
+
           startDate = new Date();
           timerInterval = window.setInterval(updateTimerDisplay, 1)
         }
-        else
+      } else
+      // State: Stopby
+      if(stateId == 3)
+      {
+        if(e.keyCode == 32)
         {
+          // Goto: Stop
+          stateId = 4
+        }
+      }
+    }
+
+    function handleKeyDown(e)
+    {
+      // State: Reset
+      if(stateId == 0)
+      {
+        if(e.keyCode == 32)
+        {
+          // Goto: Standby
+          stateId = 1
+        }
+      } else
+      // State: Start
+      if(stateId == 2)
+      {
+        if(e.keyCode == 32)
+        {
+          // Goto: Stop
+          stateId = 3
+
           window.clearInterval(timerInterval)
-          timerInterval = 0
+        }
+      }
+    }
+
+    function handleKeyPress(e)
+    {
+      // State: Stop
+      if(stateId == 4)
+      {
+        if(e.keyCode == 32)
+        {
+          // Goto: Reset
+          stateId = 0
+
+          window.clearInterval(timerInterval)
+          resetTimerDisplay()
         }
       }
     }
@@ -76,10 +124,29 @@
       elapsedMinutesDisplay.innerHTML = pad(elapsedMinutes, 2)
     }
 
+    function resetTimerDisplay()
+    {
+      var getTimeDisplay = document.getElementById('getTimeDisplay')
+      var startTimeDisplay = document.getElementById('startTimeDisplay')
+      var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
+      var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
+      var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
+
+      startTimeDisplay.innerHTML = ''
+      getTimeDisplay.innerHTML = ''
+      elapsedTimeDisplay.innerHTML = ''
+      elapsedMillisecondsDisplay.innerHTML = ''
+      elapsedSecondsDisplay.innerHTML = ''
+      elapsedMinutesDisplay.innerHTML = ''
+    }
+
     var timerInterval = 0
     var startDate;
+    var stateId = 0;
 
     window.addEventListener("keyup", handleKeyUp)
+    window.addEventListener("keydown", handleKeyDown)
+    window.addEventListener("keypress", handleKeyPress)
   </script>
   <script src="./app.js"></script>
   <script>

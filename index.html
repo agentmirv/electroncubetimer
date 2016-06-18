@@ -22,6 +22,9 @@
     <div>Elapsed Seconds</div>
     <div id="elapsedSecondsDisplay" style="margin-bottom:10px"></div>
 
+    <div>Elapsed Minutes</div>
+    <div id="elapsedMinutesDisplay" style="margin-bottom:10px"></div>
+
     <p>
     We are using node <script>document.write(process.versions.node)</script>,
     Chromium <script>document.write(process.versions.chrome)</script>,
@@ -34,6 +37,7 @@
     var startTimeDisplay = document.getElementById('startTimeDisplay')
     var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
     var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
+    var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
 
     function pad(num, size) {
         var s = "000000000" + num;
@@ -47,12 +51,14 @@
       var startTime = startDate.getTime()
       var elapsedTime = newTime - startTime
       var elapsedMilliseconds = elapsedTime % 1000
-      var elapsedSeconds = Math.floor(elapsedTime / 1000)
+      var elapsedSeconds = Math.floor(elapsedTime / 1000) % 60
+      var elapsedMinutes = Math.floor(elapsedTime / (60 * 1000))
 
       getTimeDisplay.innerHTML = newTime
       elapsedTimeDisplay.innerHTML = elapsedTime
       elapsedMillisecondsDisplay.innerHTML = pad(elapsedMilliseconds, 3)
       elapsedSecondsDisplay.innerHTML = pad(elapsedSeconds, 2)
+      elapsedMinutesDisplay.innerHTML = pad(elapsedMinutes, 2)
     }
 
     startTimeDisplay.innerHTML = startDate.getTime()

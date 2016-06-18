@@ -5,21 +5,14 @@
     <title>Electron Cube Timer</title>
   </head>
   <body>
-    <h1>Electron Cube Timer Goes Here!</h1>
+    <h1>Electron Cube Timer</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
-    <div>Number of milliseconds since 1 January 1970 00:00:00 UTC</div>
-    <div id="getTimeDisplay" style="margin-bottom:10px"></div>
-
-    <div>Start Time</div>
-    <div id="startTimeDisplay" style="margin-bottom:10px"></div>
-
-    <div>Elapsed Time</div>
-    <div id="elapsedTimeDisplay" style="margin-bottom:10px"></div>
-
     <div>Timer LCD</div>
-    <span id="elapsedMinutesDisplay"></span>:<span id="elapsedSecondsDisplay"></span>:<span id="elapsedMillisecondsDisplay"></span>
+    <span id="timerMinutes"></span><span id="timerSeconds"></span><span id="timerMilliseconds"></span>
 
     <p>Spacebar will start and stop the timer.</p>
+
+    <p id="state">Ready</p>
 
     <p>
     We are using node <script>document.write(process.versions.node)</script>,
@@ -35,20 +28,35 @@
       {
         if(e.keyCode == 32)
         {
-          // Goto: Start
+          // Goto: Running
           stateId = 2
 
           startDate = new Date();
           timerInterval = window.setInterval(updateTimerDisplay, 1)
+
+          document.getElementById('state').innerHTML = 'Running'
         }
       } else
-      // State: Stopby
+      // State: Stop
       if(stateId == 3)
       {
         if(e.keyCode == 32)
         {
-          // Goto: Stop
+          // Goto: Resting
           stateId = 4
+
+          document.getElementById('state').innerHTML = 'Resting'
+        }
+      } else
+      // State: Reset
+      if(stateId == 5)
+      {
+        if(e.keyCode == 32)
+        {
+          // Goto: Ready
+          stateId = 0
+
+          document.getElementById('state').innerHTML = 'Ready'
         }
       }
     }
@@ -62,6 +70,8 @@
         {
           // Goto: Standby
           stateId = 1
+
+          document.getElementById('state').innerHTML = 'Standby'
         }
       } else
       // State: Start
@@ -69,26 +79,26 @@
       {
         if(e.keyCode == 32)
         {
-          // Goto: Stop
+          // Goto: Stopby
           stateId = 3
 
           window.clearInterval(timerInterval)
-        }
-      }
-    }
 
-    function handleKeyPress(e)
-    {
-      // State: Stop
+          document.getElementById('state').innerHTML = 'Stopby'
+        }
+      } else
+      // State: Resting
       if(stateId == 4)
       {
         if(e.keyCode == 32)
         {
           // Goto: Reset
-          stateId = 0
+          stateId = 5
 
           window.clearInterval(timerInterval)
           resetTimerDisplay()
+
+          document.getElementById('state').innerHTML = 'Reset'
         }
       }
     }
@@ -106,47 +116,42 @@
       var newTime = newDate.getTime()
       var elapsedTime = newTime - startTime
 
-      var elapsedMilliseconds = elapsedTime % 1000
-      var elapsedSeconds = Math.floor(elapsedTime / 1000) % 60
+      var elapsedMilliseconds = elapsedTime
+      var elapsedSeconds = Math.floor(elapsedTime / 1000)
       var elapsedMinutes = Math.floor(elapsedTime / (60 * 1000))
 
-      var getTimeDisplay = document.getElementById('getTimeDisplay')
-      var startTimeDisplay = document.getElementById('startTimeDisplay')
-      var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
-      var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
-      var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
+      var displayMilliseconds = elapsedMilliseconds % 1000
+      var displaySeconds = elapsedSeconds % 60
+      var displayMinutes = elapsedMinutes
 
-      startTimeDisplay.innerHTML = startTime
-      getTimeDisplay.innerHTML = newTime
-      elapsedTimeDisplay.innerHTML = elapsedTime
-      elapsedMillisecondsDisplay.innerHTML = pad(elapsedMilliseconds, 3)
-      elapsedSecondsDisplay.innerHTML = pad(elapsedSeconds, 2)
-      elapsedMinutesDisplay.innerHTML = pad(elapsedMinutes, 2)
+      var timerMilliseconds = document.getElementById('timerMilliseconds')
+      var timerSeconds = document.getElementById('timerSeconds')
+      var timerMinutes = document.getElementById('timerMinutes')
+
+      timerMilliseconds.innerHTML = pad(displayMilliseconds, 3)
+      timerSeconds.innerHTML = pad(displaySeconds, 2) + '.'
+      timerMinutes.innerHTML = pad(displayMinutes, 2) + ':'
     }
 
     function resetTimerDisplay()
     {
-      var getTimeDisplay = document.getElementById('getTimeDisplay')
-      var startTimeDisplay = document.getElementById('startTimeDisplay')
-      var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
-      var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
-      var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
+      var timerMilliseconds = document.getElementById('timerMilliseconds')
+      var timerSeconds = document.getElementById('timerSeconds')
+      var timerMinutes = document.getElementById('timerMinutes')
 
-      startTimeDisplay.innerHTML = ''
-      getTimeDisplay.innerHTML = ''
-      elapsedTimeDisplay.innerHTML = ''
-      elapsedMillisecondsDisplay.innerHTML = ''
-      elapsedSecondsDisplay.innerHTML = ''
-      elapsedMinutesDisplay.innerHTML = ''
+      timerMilliseconds.innerHTML = '000'
+      timerSeconds.innerHTML = '00.'
+      timerMinutes.innerHTML = '00:'
     }
 
-    var timerInterval = 0
-    var startDate;
-    var stateId = 0;
+    var timerInterval
+    var startDate
+    var stateId = 0
+
+    resetTimerDisplay()
 
     window.addEventListener("keyup", handleKeyUp)
     window.addEventListener("keydown", handleKeyDown)
-    window.addEventListener("keypress", handleKeyPress)
   </script>
   <script src="./app.js"></script>
   <script>

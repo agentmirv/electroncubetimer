@@ -32,12 +32,22 @@
     </p>
   </body>
   <script>
-    var startDate = new Date();
-    var getTimeDisplay = document.getElementById('getTimeDisplay')
-    var startTimeDisplay = document.getElementById('startTimeDisplay')
-    var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
-    var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
-    var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
+    function handleKeyUp(e)
+    {
+      if(e.keyCode == 32)
+      {
+        if(timerInterval == 0)
+        {
+          startDate = new Date();
+          timerInterval = window.setInterval(updateTimerDisplay, 1)
+        }
+        else
+        {
+          window.clearInterval(timerInterval)
+          timerInterval = 0
+        }
+      }
+    }
 
     function pad(num, size) {
         var s = "000000000" + num;
@@ -46,14 +56,23 @@
 
     function updateTimerDisplay()
     {
+      var startTime = startDate.getTime()
+
       var newDate = new Date()
       var newTime = newDate.getTime()
-      var startTime = startDate.getTime()
       var elapsedTime = newTime - startTime
+
       var elapsedMilliseconds = elapsedTime % 1000
       var elapsedSeconds = Math.floor(elapsedTime / 1000) % 60
       var elapsedMinutes = Math.floor(elapsedTime / (60 * 1000))
 
+      var getTimeDisplay = document.getElementById('getTimeDisplay')
+      var startTimeDisplay = document.getElementById('startTimeDisplay')
+      var elapsedMillisecondsDisplay = document.getElementById('elapsedMillisecondsDisplay')
+      var elapsedSecondsDisplay = document.getElementById('elapsedSecondsDisplay')
+      var elapsedMinutesDisplay = document.getElementById('elapsedMinutesDisplay')
+
+      startTimeDisplay.innerHTML = startTime
       getTimeDisplay.innerHTML = newTime
       elapsedTimeDisplay.innerHTML = elapsedTime
       elapsedMillisecondsDisplay.innerHTML = pad(elapsedMilliseconds, 3)
@@ -61,10 +80,10 @@
       elapsedMinutesDisplay.innerHTML = pad(elapsedMinutes, 2)
     }
 
-    startTimeDisplay.innerHTML = startDate.getTime()
+    var timerInterval = 0
+    var startDate;
 
-    window.setInterval(updateTimerDisplay, 1)
-
+    window.addEventListener("keyup", handleKeyUp)
   </script>
   <script src="./app.js"></script>
   <script>

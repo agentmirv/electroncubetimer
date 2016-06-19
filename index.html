@@ -3,16 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <title>Electron Cube Timer</title>
+    <style>
+    .lcd {
+      font-family: monospace;
+      font-size: 100px;
+      font-style: italic;
+      font-variant: normal;
+      font-weight: 500;
+      line-height: 110px;
+      white-space: pre;
+    }
+    </style>
   </head>
   <body>
     <h1>Electron Cube Timer</h1>
     <!-- All of the Node.js APIs are available in this renderer process. -->
-    <div>Timer LCD</div>
-    <span id="timerMinutes"></span><span id="timerSeconds"></span><span id="timerMilliseconds"></span>
+    <span class="lcd"><span id="timerMinutes"></span><span id="timerSeconds"></span><span id="timerMilliseconds"></span></span>
+
+    <p><span>Status: <span><span id="state">Ready</span></p>
 
     <p>Spacebar will start and stop the timer.</p>
-
-    <p id="state">Ready</p>
 
     <p>
     We are using node <script>document.write(process.versions.node)</script>,
@@ -79,12 +89,12 @@
       {
         if(e.keyCode == 32)
         {
-          // Goto: Stopby
+          // Goto: Stop
           stateId = 3
 
           window.clearInterval(timerInterval)
 
-          document.getElementById('state').innerHTML = 'Stopby'
+          document.getElementById('state').innerHTML = 'Stop'
         }
       } else
       // State: Resting
@@ -103,8 +113,13 @@
       }
     }
 
-    function pad(num, size) {
+    function padZero(num, size) {
         var s = "000000000" + num;
+        return s.substr(s.length-size);
+    }
+
+    function padSpace(num, size) {
+        var s = "         " + num;
         return s.substr(s.length-size);
     }
 
@@ -128,9 +143,17 @@
       var timerSeconds = document.getElementById('timerSeconds')
       var timerMinutes = document.getElementById('timerMinutes')
 
-      timerMilliseconds.innerHTML = pad(displayMilliseconds, 3)
-      timerSeconds.innerHTML = pad(displaySeconds, 2) + '.'
-      timerMinutes.innerHTML = pad(displayMinutes, 2) + ':'
+      timerMilliseconds.innerHTML = padZero(displayMilliseconds, 3)
+
+      if(elapsedSeconds < 60)
+      {
+        timerSeconds.innerHTML = padSpace(displaySeconds, 2) + '.'
+      }
+      else
+      {
+        timerSeconds.innerHTML = padZero(displaySeconds, 2) + '.'
+        timerMinutes.innerHTML = padSpace(displayMinutes, 2) + ':'
+      }
     }
 
     function resetTimerDisplay()
@@ -140,8 +163,8 @@
       var timerMinutes = document.getElementById('timerMinutes')
 
       timerMilliseconds.innerHTML = '000'
-      timerSeconds.innerHTML = '00.'
-      timerMinutes.innerHTML = '00:'
+      timerSeconds.innerHTML = ' 0.'
+      timerMinutes.innerHTML = '   '
     }
 
     var timerInterval

@@ -4,26 +4,38 @@
     <meta charset="UTF-8">
     <title>Electron Cube Timer</title>
     <link href="elcuti.css" rel="stylesheet" type="text/css">
+    <link href="photon/css/photon.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <h1>Electron Cube Timer</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    <span class="lcd"><span id="timerMinutes"></span><span id="timerSeconds"></span><span id="timerMilliseconds"></span></span>
+    <div class="window">
+      <header class="toolbar toolbar-header">
+        <h1 class="title">Electron Cube Timer</h1>
+      </header>
+        <!-- All of the Node.js APIs are available in this renderer process. -->
+        <div class="window-content">
 
-    <p><span>Status: <span><span id="state">Ready</span></p>
+        <div>
+          <span class="lcd"><span id="timerMinutes"></span><span id="timerSeconds"></span><span id="timerMilliseconds"></span></span>
+        </div>
 
-    <p>Spacebar will start and stop the timer.</p>
+      </div>
+      <footer class="toolbar toolbar-footer">
+        <h1 class="title"><span>Status: <span><span id="state">Ready</span></h1>
+      </footer>
+<!--
+        <p>
+        We are using node <script>document.write(process.versions.node)</script>,
+        Chromium <script>document.write(process.versions.chrome)</script>,
+        and Electron <script>document.write(process.versions.electron)</script>.
+        </p>
+-->
+      </body>
+      <script src="./elcuti.js"></script>
+      <script src="./app.js"></script>
+      <script>
+        // You can also require other files to run in this process
+        /*require('./renderer.js')*/
+      </script>
 
-    <p>
-    We are using node <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
-    </p>
-  </body>
-  <script src="./elcuti.js"></script>
-  <script src="./app.js"></script>
-  <script>
-    // You can also require other files to run in this process
-    /*require('./renderer.js')*/
-  </script>
+  </div>
 </html>
